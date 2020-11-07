@@ -11,12 +11,12 @@ use Illuminate\Pagination\Paginator;
 
 trait ApiResponser {
 
-    private function successResponse($data, $code)
+    protected function successResponse($data, $code =200)
     {
-        return response()->json($data, $code);
+        return response()->json(['data'=> $data , 'code' => $code], $code);
     }
 
-    protected function errorResponse($message, $code)
+    protected function errorResponse($message, $code = 404)
     {
         return response()->json(['error_message'=> $message , 'code' => $code], $code);
     }
