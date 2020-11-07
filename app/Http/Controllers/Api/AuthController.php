@@ -14,15 +14,25 @@ class AuthController extends Controller
     public function register(Request $request) {
         $rule = [
             'name'      => 'required',
-            'email'     => 'email|required|unique:users,email',
-            'password'  => 'required'
+            'email'     => 'required|email|unique:users,email',
+            'password'  => 'required|min:6'
         ];
         $message = [
             'email.unique'  => 'The email address you provided is already associated with another account.',
             'email.required' => 'Email field is required'
         ];
         $this->validate($request, $rule, $message);
+ 
 
+        // $validator = Validator::make($request->all(),[
+        //     'name' => 'required|min:2',
+        //     'email' => 'required|email',
+        //     'password' => 'required|min:4',
+        // ])->validate();
+        
+        // if($validator->fails()){
+        //     return $validator;
+        // }
 
         $data = [
             'name'  => $request->name,
@@ -67,5 +77,14 @@ class AuthController extends Controller
 
         return $this->showAllWithoutPagination($res);
  
+    }
+
+    public function logout (Request $request) {
+        $token = $request->user()->token();
+        $token->revoke();
+    
+        $response = 'You have been succesfully logged out!';
+        return response($response, 200);
+    
     }
 }
